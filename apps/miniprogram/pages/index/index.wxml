@@ -1,0 +1,60 @@
+<view class="page homePage">
+  <view class="heroPanel">
+    <text class="eyebrow">GAOKAO XINSHENG</text>
+    <view class="title">高考新生</view>
+    <view class="lead">用一场可恢复、可辅导、可估分的模拟考试，把复读第一步变成可以看见的行动。</view>
+  </view>
+
+  <view class="panel">
+    <text class="eyebrow">DEV STATUS</text>
+    <view class="statusText">{{healthStatus}}</view>
+    <view class="muted">本机仅用于流程和美术确认；真机与体验版请切换到 Vercel HTTPS API。</view>
+
+    <view class="matchPanel">
+      <text class="eyebrow">PAPER MATCH</text>
+      <view class="pickerGrid">
+        <picker mode="selector" range="{{yearLabels}}" value="{{selectedYearIndex}}" bindchange="onYearChange">
+          <view class="pickerCell">
+            <text>届次</text>
+            <strong>{{yearLabels[selectedYearIndex]}}</strong>
+          </view>
+        </picker>
+        <picker mode="selector" range="{{regionLabels}}" value="{{selectedRegionIndex}}" bindchange="onRegionChange">
+          <view class="pickerCell">
+            <text>地区</text>
+            <strong>{{regionLabels[selectedRegionIndex]}}</strong>
+          </view>
+        </picker>
+        <picker mode="selector" range="{{trackLabels}}" value="{{selectedTrackIndex}}" bindchange="onTrackChange">
+          <view class="pickerCell">
+            <text>科类</text>
+            <strong>{{trackLabels[selectedTrackIndex]}}</strong>
+          </view>
+        </picker>
+        <picker mode="selector" range="{{subjectLabels}}" value="{{selectedSubjectIndex}}" bindchange="onSubjectChange">
+          <view class="pickerCell">
+            <text>科目</text>
+            <strong>{{subjectLabels[selectedSubjectIndex]}}</strong>
+          </view>
+        </picker>
+      </view>
+
+      <button class="secondaryButton matchButton" loading="{{loading}}" bindtap="matchPaper">匹配试卷</button>
+      <view class="muted">{{matchStatus}}</view>
+
+      <picker wx:if="{{candidates.length}}" mode="selector" range="{{candidates}}" range-key="title" value="{{selectedCandidateIndex}}" bindchange="onCandidateChange">
+        <view class="candidateCard">
+          <view class="candidateTitle">{{selectedCandidateTitle}}</view>
+          <view class="muted">{{selectedCandidateMeta}}</view>
+          <view class="muted">{{selectedCandidateConfidence}}</view>
+        </view>
+      </picker>
+    </view>
+
+    <view class="buttonRow">
+      <button class="primaryButton" loading="{{loading}}" bindtap="startExam">开始一场考试</button>
+      <button class="secondaryButton" bindtap="resumeExam">恢复上次考试</button>
+      <button class="secondaryButton" bindtap="openLastReport">查看上次成绩单</button>
+    </view>
+  </view>
+</view>

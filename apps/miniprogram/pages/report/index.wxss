@@ -1,0 +1,46 @@
+.shareToken {
+  margin-top: 18rpx;
+  color: #0b3d91;
+  font-size: 24rpx;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.visibilityGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14rpx;
+  margin: 22rpx 0;
+}
+
+.visibilityChip {
+  min-height: 72rpx;
+  border: 2rpx solid rgba(12, 24, 48, 0.14);
+  border-radius: 12rpx;
+  background: #fffdf8;
+  color: #0c1830;
+  font-size: 26rpx;
+  font-weight: 800;
+  line-height: 72rpx;
+}
+
+.visibilityChip.active {
+  border-color: #0b3d91;
+  background: #0b3d91;
+  color: #fff;
+}
+
+.questionResult {
+  border-top: 2rpx solid rgba(12, 24, 48, 0.12);
+  padding: 22rpx 0;
+}
+
+.questionResult:first-of-type {
+  border-top: 0;
+}
+
+.resultTitle {
+  margin-bottom: 8rpx;
+  font-size: 32rpx;
+  font-weight: 900;
+}

@@ -1,0 +1,70 @@
+<view class="page">
+  <text class="eyebrow">AI SCORE REPORT</text>
+  <view class="title">双成绩单</view>
+  <view class="muted">{{status}}</view>
+
+  <view class="metricGrid" wx:if="{{report}}">
+    <view class="metric">
+      <text class="metricValue">{{report.independentScore}}</text>
+      <text class="metricLabel">独立作答分 / {{report.totalScore}}</text>
+    </view>
+    <view class="metric">
+      <text class="metricValue">{{report.collaborativeScore}}</text>
+      <text class="metricLabel">AI 协作分 / {{report.totalScore}}</text>
+    </view>
+    <view class="metric">
+      <text class="metricValue">{{report.aiHelpCount}}</text>
+      <text class="metricLabel">AI 提示次数</text>
+    </view>
+    <view class="metric">
+      <text class="metricValue">{{report.reviewCount}}</text>
+      <text class="metricLabel">需要复核题</text>
+    </view>
+  </view>
+
+  <view class="panel" wx:if="{{report}}">
+    <text class="eyebrow">SHARE</text>
+    <view class="muted">分享页只展示公开字段，不包含逐题答案。</view>
+    <view class="visibilityGrid">
+      <button
+        class="visibilityChip {{shareVisibility.showIndependentScore ? 'active' : ''}}"
+        data-field="showIndependentScore"
+        bindtap="onShareVisibilityChange"
+      >独立分</button>
+      <button
+        class="visibilityChip {{shareVisibility.showCollaborativeScore ? 'active' : ''}}"
+        data-field="showCollaborativeScore"
+        bindtap="onShareVisibilityChange"
+      >AI协作分</button>
+      <button
+        class="visibilityChip {{shareVisibility.showPaperTitle ? 'active' : ''}}"
+        data-field="showPaperTitle"
+        bindtap="onShareVisibilityChange"
+      >试卷名</button>
+      <button
+        class="visibilityChip {{shareVisibility.showRegion ? 'active' : ''}}"
+        data-field="showRegion"
+        bindtap="onShareVisibilityChange"
+      >地区</button>
+    </view>
+    <view class="buttonRow">
+      <button class="primaryButton" bindtap="createShareCard">生成分享卡</button>
+      <button class="secondaryButton" bindtap="openMistakes">错题回看</button>
+      <button class="secondaryButton" bindtap="copyShareUrl">复制分享链接</button>
+    </view>
+    <view class="shareToken" wx:if="{{shareToken}}">{{shareToken}}</view>
+  </view>
+
+  <view class="panel" wx:if="{{report}}">
+    <text class="eyebrow">QUESTION EVIDENCE</text>
+    <view
+      wx:for="{{report.questions}}"
+      wx:key="questionId"
+      class="questionResult"
+    >
+      <view class="resultTitle">第 {{item.orderNo}} 题：{{item.score}} / {{item.maxScore}}</view>
+      <view class="muted">你的答案：{{item.userAnswerText}}</view>
+      <view class="muted">{{item.evidence}}</view>
+    </view>
+  </view>
+</view>

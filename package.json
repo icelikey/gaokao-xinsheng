@@ -1,0 +1,34 @@
+{
+  "name": "gaokao-xinsheng",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@9.15.4",
+  "scripts": {
+    "dev": "pnpm --filter @gaokao-xinsheng/web dev",
+    "build": "pnpm --filter @gaokao-xinsheng/web build",
+    "lint": "pnpm --filter @gaokao-xinsheng/web lint",
+    "typecheck": "pnpm --filter @gaokao-xinsheng/contracts typecheck && pnpm --filter @gaokao-xinsheng/ai-tutor typecheck && pnpm --filter @gaokao-xinsheng/grader typecheck && pnpm --filter @gaokao-xinsheng/web typecheck",
+    "test:ai-golden": "tsx scripts/ai-golden-check.ts",
+    "test:grading-golden": "tsx scripts/grading-golden-check.ts",
+    "test:catalog-contract": "tsx scripts/catalog-contract-check.ts",
+    "test:runtime-contract": "tsx scripts/runtime-contract-check.ts",
+    "test:report-contract": "tsx scripts/report-contract-check.ts",
+    "test:share-edge-cases": "tsx scripts/share-edge-case-check.ts",
+    "test:review-workflow": "tsx scripts/review-workflow-contract-check.ts",
+    "test:paper-import": "tsx scripts/paper-import-contract-check.ts",
+    "test:deployment-contract": "tsx scripts/deployment-contract-check.ts",
+    "test:prd-traceability": "tsx scripts/prd-traceability-check.ts",
+    "test:store-backend": "tsx scripts/store-backend-contract-check.ts",
+    "test:supabase-contract": "tsx scripts/supabase-contract-check.ts",
+    "test:supabase-hosted-smoke": "tsx scripts/supabase-hosted-smoke.ts",
+    "test:miniprogram-contract": "tsx scripts/miniprogram-contract-check.ts",
+    "verify": "pnpm lint && pnpm typecheck && pnpm test:ai-golden && pnpm test:grading-golden && pnpm test:catalog-contract && pnpm test:runtime-contract && pnpm test:report-contract && pnpm test:share-edge-cases && pnpm test:review-workflow && pnpm test:paper-import && pnpm test:deployment-contract && pnpm test:prd-traceability && pnpm test:store-backend && pnpm test:supabase-contract && pnpm test:miniprogram-contract && pnpm build"
+  },
+  "devDependencies": {
+    "@gaokao-xinsheng/ai-tutor": "workspace:*",
+    "@gaokao-xinsheng/contracts": "workspace:*",
+    "@gaokao-xinsheng/grader": "workspace:*",
+    "tsx": "^4.20.3",
+    "typescript": "^5.5.4"
+  }
+}

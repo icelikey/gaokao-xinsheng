@@ -1,0 +1,16 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/exam/index",
+    "pages/report/index",
+    "pages/mistakes/index",
+    "pages/share/index"
+  ],
+  "window": {
+    "navigationBarTitleText": "高考新生",
+    "navigationBarBackgroundColor": "#061832",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f7f3ea"
+  },
+  "style": "v2"
+}

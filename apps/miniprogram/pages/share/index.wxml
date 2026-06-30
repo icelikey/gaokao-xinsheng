@@ -1,0 +1,35 @@
+<view class="page sharePage">
+  <view class="panel publicCard" wx:if="{{shareCard}}">
+    <text class="eyebrow">PUBLIC SHARE</text>
+    <image
+      wx:if="{{shareCard.objectUrl}}"
+      class="posterImage"
+      src="{{shareCard.objectUrl}}"
+      mode="widthFix"
+    />
+    <view class="title">{{shareCard.publicFields.title}}</view>
+    <view
+      class="metricGrid"
+      wx:if="{{shareCard.publicFields.independentScore !== null || shareCard.publicFields.collaborativeScore !== null}}"
+    >
+      <view class="metric" wx:if="{{shareCard.publicFields.independentScore !== null}}">
+        <text class="metricValue">{{shareCard.publicFields.independentScore}}</text>
+        <text class="metricLabel">独立作答分 / {{shareCard.publicFields.totalScore}}</text>
+      </view>
+      <view class="metric" wx:if="{{shareCard.publicFields.collaborativeScore !== null}}">
+        <text class="metricValue">{{shareCard.publicFields.collaborativeScore}}</text>
+        <text class="metricLabel">AI 协作分 / {{shareCard.publicFields.totalScore}}</text>
+      </view>
+    </view>
+    <view class="shareMeta" wx:if="{{shareCard.publicFields.paperTitle || shareCard.publicFields.region}}">
+      <text wx:if="{{shareCard.publicFields.paperTitle}}">{{shareCard.publicFields.paperTitle}}</text>
+      <text wx:if="{{shareCard.publicFields.region}}">{{shareCard.publicFields.region}}</text>
+    </view>
+    <view class="muted">AI 提示 {{shareCard.publicFields.aiHelpCount}} 次 · 需复核 {{shareCard.publicFields.reviewCount}} 题</view>
+    <view class="muted">{{shareCard.publicFields.disclaimer}}</view>
+  </view>
+  <view class="panel" wx:else>
+    <text class="eyebrow">PUBLIC SHARE</text>
+    <view class="muted">{{status}}</view>
+  </view>
+</view>

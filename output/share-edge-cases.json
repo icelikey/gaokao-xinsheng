@@ -1,0 +1,77 @@
+{
+  "ok": true,
+  "edgeCases": [
+    {
+      "id": "zero-score",
+      "description": "0 score visible share card.",
+      "file": "output/share-edge-zero-score.png",
+      "byteSize": 23279,
+      "width": 1080,
+      "height": 1440,
+      "sampledColors": 10,
+      "publicFields": {
+        "independentScore": 0,
+        "collaborativeScore": 0,
+        "totalScore": 150,
+        "paperTitleLength": 0,
+        "regionLength": 0
+      }
+    },
+    {
+      "id": "full-score",
+      "description": "Full score visible share card.",
+      "file": "output/share-edge-full-score.png",
+      "byteSize": 23389,
+      "width": 1080,
+      "height": 1440,
+      "sampledColors": 10,
+      "publicFields": {
+        "independentScore": 150,
+        "collaborativeScore": 150,
+        "totalScore": 150,
+        "paperTitleLength": 0,
+        "regionLength": 0
+      }
+    },
+    {
+      "id": "long-paper-visible",
+      "description": "Long paper title and region are public fields.",
+      "file": "output/share-edge-long-paper-visible.png",
+      "byteSize": 23408,
+      "width": 1080,
+      "height": 1440,
+      "sampledColors": 10,
+      "publicFields": {
+        "independentScore": 96,
+        "collaborativeScore": 121,
+        "totalScore": 150,
+        "paperTitleLength": 46,
+        "regionLength": 18
+      }
+    },
+    {
+      "id": "hidden-all",
+      "description": "Scores, paper title and region are all hidden.",
+      "file": "output/share-edge-hidden-all.png",
+      "byteSize": 23292,
+      "width": 1080,
+      "height": 1440,
+      "sampledColors": 9,
+      "publicFields": {
+        "independentScore": null,
+        "collaborativeScore": null,
+        "totalScore": null,
+        "paperTitleLength": 0,
+        "regionLength": 0
+      }
+    }
+  ],
+  "samplePoster": {
+    "file": "output/share-poster-sample.png",
+    "byteSize": 23393,
+    "width": 1080,
+    "height": 1440
+  },
+  "mobileShareViewportCss": true,
+  "outputManifest": "output/share-edge-cases.json"
+}

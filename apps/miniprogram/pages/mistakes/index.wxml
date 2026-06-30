@@ -1,0 +1,42 @@
+<view class="page">
+  <text class="eyebrow">MISTAKES</text>
+  <view class="title">错题回看</view>
+  <view class="muted">{{status}}</view>
+
+  <view class="metricGrid" wx:if="{{report}}">
+    <view class="metric">
+      <text class="metricValue">{{mistakes.length}}</text>
+      <text class="metricLabel">错题/待复核</text>
+    </view>
+    <view class="metric">
+      <text class="metricValue">{{report.reviewCount}}</text>
+      <text class="metricLabel">需要复核题</text>
+    </view>
+  </view>
+
+  <view class="panel" wx:if="{{report && !mistakes.length}}">
+    <text class="eyebrow">EMPTY</text>
+    <view class="muted">本次没有错题或待复核题。这只是 MVP 规则下的结果，不等同于官方高考成绩。</view>
+  </view>
+
+  <view class="panel" wx:if="{{mistakes.length}}">
+    <text class="eyebrow">QUESTION REVIEW</text>
+    <view wx:for="{{mistakes}}" wx:key="questionId" class="mistakeItem">
+      <view class="mistakeTitle">第 {{item.orderNo}} 题：{{item.score}} / {{item.maxScore}}</view>
+      <view class="muted">{{item.stem}}</view>
+      <view class="mistakeBlock">
+        <text>本次作答</text>
+        <view>{{item.userAnswerText}}</view>
+      </view>
+      <view class="mistakeBlock">
+        <text>参考答案</text>
+        <view>{{item.correctAnswer}}</view>
+      </view>
+      <view class="mistakeBlock">
+        <text>评分依据</text>
+        <view>{{item.evidence}}</view>
+      </view>
+      <view class="muted">{{item.reviewText}} · 置信度 {{item.confidence}}</view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,82 @@
+.homePage {
+  background:
+    linear-gradient(160deg, rgba(6, 24, 50, 0.94), rgba(11, 61, 145, 0.78)),
+    #061832;
+}
+
+.heroPanel {
+  padding: 56rpx 0 40rpx;
+  color: #ffffff;
+}
+
+.homePage .title {
+  color: #ffffff;
+  font-size: 88rpx;
+}
+
+.homePage .lead {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.statusText {
+  margin: 16rpx 0;
+  color: #0b3d91;
+  font-size: 34rpx;
+  font-weight: 900;
+}
+
+.matchPanel {
+  display: block;
+  margin: 28rpx 0;
+  padding: 24rpx;
+  border: 1rpx solid #d8e0ed;
+  border-radius: 12rpx;
+  background: #f8fbff;
+}
+
+.pickerGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16rpx;
+  margin: 20rpx 0;
+}
+
+.pickerCell {
+  min-height: 104rpx;
+  padding: 18rpx;
+  border: 1rpx solid #d8e0ed;
+  border-radius: 12rpx;
+  background: #ffffff;
+}
+
+.pickerCell text {
+  display: block;
+  color: #68768a;
+  font-size: 24rpx;
+}
+
+.pickerCell strong {
+  display: block;
+  margin-top: 8rpx;
+  color: #10233f;
+  font-size: 30rpx;
+}
+
+.matchButton {
+  width: 100%;
+}
+
+.candidateCard {
+  margin-top: 18rpx;
+  padding: 20rpx;
+  border: 2rpx solid #0b3d91;
+  border-radius: 12rpx;
+  background: #ffffff;
+}
+
+.candidateTitle {
+  margin-bottom: 8rpx;
+  color: #10233f;
+  font-size: 32rpx;
+  font-weight: 900;
+}

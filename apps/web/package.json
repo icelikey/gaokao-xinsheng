@@ -1,0 +1,28 @@
+{
+  "name": "@gaokao-xinsheng/web",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "lint": "eslint . --max-warnings=0",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@gaokao-xinsheng/ai-tutor": "workspace:*",
+    "@gaokao-xinsheng/contracts": "workspace:*",
+    "@gaokao-xinsheng/grader": "workspace:*",
+    "next": "^15.3.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.2.0",
+    "@types/node": "^22.10.7",
+    "@types/react": "^19.0.7",
+    "@types/react-dom": "^19.0.3",
+    "eslint": "^9.18.0",
+    "eslint-config-next": "^15.3.4",
+    "typescript": "^5.5.4"
+  }
+}

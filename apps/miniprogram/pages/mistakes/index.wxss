@@ -1,0 +1,31 @@
+.mistakeItem {
+  border-top: 2rpx solid rgba(12, 24, 48, 0.12);
+  padding: 24rpx 0;
+}
+
+.mistakeItem:first-of-type {
+  border-top: 0;
+}
+
+.mistakeTitle {
+  margin-bottom: 12rpx;
+  color: #10233f;
+  font-size: 34rpx;
+  font-weight: 900;
+}
+
+.mistakeBlock {
+  margin-top: 16rpx;
+  border: 2rpx solid rgba(12, 24, 48, 0.12);
+  border-radius: 12rpx;
+  padding: 18rpx;
+  background: #ffffff;
+}
+
+.mistakeBlock text {
+  display: block;
+  margin-bottom: 8rpx;
+  color: #667085;
+  font-size: 24rpx;
+  font-weight: 800;
+}

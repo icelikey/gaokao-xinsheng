@@ -1,0 +1,8 @@
+{
+  "name": "@gaokao-xinsheng/miniprogram",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "check": "tsx ../../scripts/miniprogram-contract-check.ts"
+  }
+}

@@ -1,0 +1,100 @@
+page {
+  min-height: 100vh;
+  color: #0c1830;
+  background: #f7f3ea;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+.page {
+  min-height: 100vh;
+  padding: 40rpx 32rpx 72rpx;
+  box-sizing: border-box;
+}
+
+.eyebrow {
+  color: #0b8f99;
+  font-size: 24rpx;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 18rpx 0;
+  color: #0c1830;
+  font-size: 64rpx;
+  font-weight: 900;
+  line-height: 1.02;
+}
+
+.lead,
+.muted {
+  color: #667085;
+  font-size: 28rpx;
+  line-height: 1.7;
+}
+
+.panel {
+  margin-top: 28rpx;
+  border: 2rpx solid rgba(12, 24, 48, 0.14);
+  border-radius: 16rpx;
+  padding: 28rpx;
+  background: #fffdf8;
+  box-sizing: border-box;
+}
+
+.buttonRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+  margin-top: 28rpx;
+}
+
+.primaryButton,
+.secondaryButton {
+  min-height: 88rpx;
+  border-radius: 16rpx;
+  padding: 0 28rpx;
+  font-size: 30rpx;
+  font-weight: 800;
+  line-height: 88rpx;
+}
+
+.primaryButton {
+  color: #ffffff;
+  background: #0b3d91;
+}
+
+.secondaryButton {
+  color: #0c1830;
+  border: 2rpx solid rgba(12, 24, 48, 0.14);
+  background: #fffdf8;
+}
+
+.metricGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20rpx;
+  margin-top: 24rpx;
+}
+
+.metric {
+  border: 2rpx solid rgba(12, 24, 48, 0.14);
+  border-radius: 16rpx;
+  padding: 24rpx;
+  background: #f9fbff;
+}
+
+.metricValue {
+  display: block;
+  color: #0b3d91;
+  font-size: 56rpx;
+  font-weight: 900;
+}
+
+.metricLabel {
+  display: block;
+  margin-top: 8rpx;
+  color: #667085;
+  font-size: 24rpx;
+}

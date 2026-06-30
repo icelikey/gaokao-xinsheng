@@ -1,0 +1,68 @@
+<view class="page">
+  <view class="topbar">
+    <text>考试会话</text>
+    <text>{{session.state || "RESTORING"}}</text>
+  </view>
+
+  <view class="panel answerPanel">
+    <text class="eyebrow">ANSWER CARD</text>
+    <view class="answerGrid">
+      <button
+        wx:for="{{answerGrid}}"
+        wx:key="id"
+        data-index="{{index}}"
+        class="answerNumber {{item.answered ? 'answered' : ''}} {{item.active ? 'active' : ''}}"
+        bindtap="jumpToQuestion"
+      >
+        {{item.orderNo}}
+      </button>
+    </view>
+    <button class="primaryButton" loading="{{submitting}}" bindtap="submitExam">交卷并生成 AI 估分</button>
+    <view class="muted">{{saveStatus}}</view>
+  </view>
+
+  <view class="panel questionPanel" wx:if="{{currentQuestion}}">
+    <view class="questionMeta">
+      <text>{{currentTypeLabel}}</text>
+      <text>第 {{currentQuestion.orderNo}} 题</text>
+      <text>{{currentQuestion.maxScore}} 分</text>
+    </view>
+
+    <view class="questionStem">{{currentQuestion.stem}}</view>
+
+    <view class="choiceGrid" wx:if="{{currentQuestionIsChoice}}">
+      <button
+        wx:for="{{currentQuestion.options}}"
+        wx:key="*this"
+        data-value="{{item}}"
+        class="choiceButton {{currentAnswer === item ? 'selected' : ''}}"
+        bindtap="updateChoice"
+      >
+        {{item}}
+      </button>
+    </view>
+
+    <textarea
+      wx:else
+      class="answerInput"
+      value="{{currentAnswer}}"
+      placeholder="在这里输入你的答案"
+      bindinput="updateText"
+      bindblur="saveCurrentAnswer"
+    />
+
+    <view class="buttonRow">
+      <button class="secondaryButton" bindtap="saveCurrentAnswer">保存答案</button>
+      <button class="secondaryButton" bindtap="previousQuestion">上一题</button>
+      <button class="primaryButton" bindtap="nextQuestion">下一题</button>
+    </view>
+  </view>
+
+  <view class="panel">
+    <text class="eyebrow">AI TUTOR</text>
+    <view class="hintRow">
+      <button wx:for="{{hintLevels}}" wx:key="*this" data-level="{{item}}" bindtap="requestHint">L{{item}}</button>
+    </view>
+    <view class="muted">{{aiHint}}</view>
+  </view>
+</view>
