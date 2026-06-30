@@ -1,4 +1,5 @@
 .vercel/
+.logs/
 .next/
 node_modules/
 dist/
