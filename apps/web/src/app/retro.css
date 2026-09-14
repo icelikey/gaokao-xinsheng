@@ -1,0 +1,224 @@
+/* Additive visual layer: no changes to answer, tutor, grading or API contracts. */
+:root {
+  --ink: #302b23;
+  --paper: #eee5d2;
+  --paper-strong: #fbf6e9;
+  --blue: #913a32;
+  --blue-deep: #203f37;
+  --cyan: #b88b45;
+  --line: #d0bea0;
+  --muted: #71604c;
+  --shadow: 0 14px 32px #35221024;
+  --retro-red: #913a32;
+  --retro-board: #203f37;
+  --retro-serif: "STSong", "Songti SC", "SimSun", "Noto Serif CJK SC", serif;
+  --retro-paper-texture: repeating-linear-gradient(0deg, #88673505 0 1px, transparent 1px 4px);
+}
+body[data-retro-ui] {
+  background: var(--retro-paper-texture), radial-gradient(ellipse at 10% 0, #fff9e7 0, transparent 65%), var(--paper);
+  color: var(--ink);
+  font-family: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  line-height: 1.7;
+}
+[data-retro-ui] h1, [data-retro-ui] h2, [data-retro-ui] h3 { font-family: var(--retro-serif); }
+[data-retro-ui] h1 { line-height: 1.2; }
+[data-retro-ui] button, [data-retro-ui] input, [data-retro-ui] select { font: inherit; }
+[data-retro-ui] button, [data-retro-ui] a, [data-retro-ui] input, [data-retro-ui] textarea, [data-retro-ui] select { -webkit-tap-highlight-color: #913a3220; }
+[data-retro-ui] :focus-visible { outline: 3px solid #aa7020; outline-offset: 4px; }
+[data-retro-ui] button:disabled { opacity: .55; cursor: not-allowed; }
+[data-retro-ui] input, [data-retro-ui] textarea, [data-retro-ui] select { accent-color: var(--retro-red); }
+[data-retro-ui] .primaryButton, [data-retro-ui] .secondaryButton {
+  border-radius: 3px;
+  min-height: 48px;
+  border: 1px solid var(--retro-red);
+  padding: 10px 22px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: center;
+  transition: box-shadow .18s, background .18s;
+}
+[data-retro-ui] .primaryButton {
+  background: var(--retro-paper-texture), var(--retro-red);
+  color: #fff8e8;
+  box-shadow: inset 0 0 0 3px #ffffff18, 0 3px 0 #692c28;
+}
+[data-retro-ui] .primaryButton:hover { background-color: #7c302b; }
+[data-retro-ui] .secondaryButton { color: #663b31; background: #faf4e5; border-color: #c0a787; }
+[data-retro-ui] .secondaryButton:hover { background: #f0e5d1; }
+.retroHome { max-width: 1600px; margin: auto; padding: 0 48px; }
+.retroNav { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 24px 0; border-bottom: 1px solid #bead8d; }
+.retroBrand { display: inline-flex; align-items: center; gap: 12px; font: 700 24px var(--retro-serif); white-space: nowrap; }
+.retroBrand > span { display: grid; place-items: center; width: 36px; height: 36px; border: 2px solid var(--retro-red); outline: 1px solid var(--retro-red); outline-offset: 3px; color: var(--retro-red); font-size: 24px; transform: rotate(-5deg); }
+.retroBrand small { margin-left: 12px; border-left: 1px solid #bca88b; padding-left: 18px; color: var(--muted); font: 12px system-ui, sans-serif; letter-spacing: .1em; }
+.retroNav nav { display: flex; flex-wrap: wrap; gap: 28px; font-size: 13px; }
+.retroNav nav a { padding: 8px 0; border-bottom: 1px solid transparent; }
+.retroNav nav a:hover { border-color: var(--retro-red); color: var(--retro-red); }
+.retroFoyer { display: grid; grid-template-columns: 1.15fr .85fr; gap: 0; padding-top: 32px; }
+.retroBlackboard {
+  position: relative; isolation: isolate; display: flex; flex-direction: column; overflow: hidden;
+  padding: 36px 42px 32px; min-width: 0; color: #faf2d8;
+  border: 12px solid #795039; border-image: linear-gradient(100deg, #604330, #a3784c 25%, #6b4930 65%, #987148) 1;
+  background: repeating-linear-gradient(172deg, #ffffff02 0 2px, transparent 2px 6px), radial-gradient(ellipse at 80% 80%, #f2edce0c, transparent 70%), #203f37;
+  box-shadow: inset 0 0 28px #061c1799, 0 12px 20px #45342424;
+}
+.retroBlackboard::before { content: ""; position: absolute; z-index: -1; width: 70%; height: 180%; left: -40%; top: -30%; transform: rotate(25deg); background: repeating-linear-gradient(90deg, #f7e6ac09 0 24%, transparent 24% 27%); pointer-events: none; }
+.retroBoardTop { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid #d5d8be45; padding-bottom: 15px; font-size: 11px; letter-spacing: .12em; color: #d3d6bd; }
+.retroKicker { margin: 40px 0 16px; font-size: 12px; letter-spacing: .25em; color: #dccea5; }
+.retroBlackboard h1 { font: 700 clamp(44px, 5.5vw, 88px)/1.22 var(--retro-serif); letter-spacing: .12em; margin: 0 0 16px; color: #faf1d9; text-shadow: 1px 1px 0 #ffffff44, -1px 0 0 #ddd5b84a; }
+.retroChalkLine { margin: 0 0 20px; font: 400 clamp(25px, 2.9vw, 40px)/1.7 var(--retro-serif); letter-spacing: .08em; color: #e9d9aa; }
+.retroBoardCopy { margin: 0 0 32px; color: #d5daca; font-size: 14px; line-height: 2.05; }
+.retroBoardFooter { margin-top: auto; padding-top: 18px; display: flex; justify-content: space-between; align-items: center; gap: 16px; font: 14px/1.7 var(--retro-serif); color: #d5d6bb; border-top: 1px solid #d5d8be32; }
+.retroBoardFooter i { display: block; flex-shrink: 0; width: 46px; height: 8px; border-radius: 2px; background: linear-gradient(#fff9dc, #c2c2b0); box-shadow: 3px 3px 3px #0005; transform: rotate(-7deg); }
+.retroDesk {
+  padding: 28px 24px 14px 32px; display: flex; flex-direction: column; justify-content: center;
+  background: repeating-linear-gradient(2deg, #7253320a 0 2px, transparent 2px 9px), linear-gradient(100deg, #ccb28b, #e8d3ab 55%, #c9ad83);
+  box-shadow: inset 8px 0 16px #69462720;
+}
+.retroAdmission { position: relative; padding: 32px; background: var(--retro-paper-texture), linear-gradient(105deg,#fffbee,#f4ead3); border: 1px solid #d1bd99; outline: 1px solid #c6ae8766; outline-offset: -8px; box-shadow: 3px 9px 20px #6143242b; transform: rotate(.7deg); }
+.retroClip { position: absolute; width: 66px; height: 18px; top: -9px; left: calc(50% - 33px); border: 2px solid #585346; border-radius: 5px 5px 2px 2px; background: linear-gradient(90deg,#7c7769,#aca591 48%,#625c50); box-shadow: 0 3px 5px #392e2340; }
+.retroTicketTop { display: flex; justify-content: space-between; gap: 10px; font: 10px/1.6 system-ui,sans-serif; color: var(--muted); letter-spacing: .04em; }
+.retroTicketTop > span:last-child { color: var(--retro-red); border: 1px solid var(--retro-red); padding: 0 5px; white-space: nowrap; }
+.retroAdmission h2 { margin: 24px 0 6px; font: 700 clamp(27px,3.1vw,42px)/1.3 var(--retro-serif); text-align: center; letter-spacing: .17em; }
+.retroEnglish { font: 8px/1.5 system-ui,sans-serif; text-align: center; letter-spacing: .14em; color: var(--muted); }
+.retroTicketRule { border-top: 3px double #7e674e; margin: 20px 0 8px; }
+.retroTicketFields { margin: 0; }
+.retroTicketFields > div { display: grid; grid-template-columns: 42px 1fr; gap: 10px; align-items: baseline; padding: 13px 0; border-bottom: 1px solid #c7b99b; }
+.retroTicketFields dt { color: var(--muted); font-size: 12px; }
+.retroTicketFields dd { margin: 0; font: 700 18px/1.5 var(--retro-serif); }
+.retroTicketFields dd span { display: block; margin-top: 3px; color: var(--muted); font: 10px/1.5 system-ui,sans-serif; }
+.retroAdmissionNote { padding: 16px 0; font-size: 12px; line-height: 1.9; }
+.retroAdmissionNote strong { color: var(--retro-red); }
+.retroAdmissionNote p { margin: 6px 0 0; color: #665641; }
+[data-retro-ui] .retroEnter { display: flex; justify-content: space-between; width: 100%; font-family: var(--retro-serif); font-size: 17px; }
+.retroTicketFoot { margin: 12px 0 0; color: #75654f; font-size: 10px; text-align: center; }
+.retroDeskNote { text-align: center; margin-top: 18px; font: 14px/1.5 var(--retro-serif); color: #6a4b31; transform: rotate(-2deg); }
+.retroProcess { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); border-bottom: 1px solid #bbaa8a; margin: 0 0 48px; padding: 24px 0; gap: 12px; }
+.retroProcess > div { display: flex; gap: 14px; align-items: center; padding: 4px 20px; border-right: 1px solid #c7b595; }
+.retroProcess > div:first-child { padding-left: 0; }
+.retroProcess > div:last-child { border-right: none; }
+.retroProcess b { color: var(--retro-red); font: italic 26px Georgia,serif; }
+.retroProcess span { font-size: 13px; font-weight: 700; }
+.retroProcess small { display: block; font-size: 10px; font-weight: 400; color: var(--muted); margin-top: 5px; }
+.retroPrinciples { display: grid; grid-template-columns: 1.2fr repeat(3,1fr); gap: 26px; padding: 0 0 44px; }
+.retroSectionTitle > span { color: var(--retro-red); font-size: 11px; letter-spacing: .16em; }
+.retroSectionTitle h2 { font: 700 24px/1.7 var(--retro-serif); margin: 10px 0 0; }
+.retroPrinciples article { border-left: 1px solid #c6b496; padding-left: 24px; }
+.retroCardNumber { font: 20px var(--retro-serif); color: var(--retro-red); }
+.retroPrinciples h3 { font: 700 16px/1.5 var(--retro-serif); margin: 14px 0 8px; }
+.retroPrinciples p { font-size: 12px; line-height: 1.9; margin-bottom: 0; color: var(--muted); }
+.retroFooter { display: flex; align-items: center; gap: 22px; padding: 24px 0 84px; border-top: 1px solid #c7b797; }
+.retroFooter strong { flex-shrink: 0; font: 700 19px var(--retro-serif); }
+.retroFooter p { margin: 0; max-width: 650px; font-size: 11px; color: var(--muted); }
+.retroFooter a { margin-left: auto; color: var(--retro-red); white-space: nowrap; font-size: 12px; }
+.retroTools { position: fixed; z-index: 30; right: max(16px, env(safe-area-inset-right)); bottom: max(16px, env(safe-area-inset-bottom)); }
+.retroTools button { min-height: 44px; padding: 8px 15px; border: 1px solid #b6a07e; border-radius: 3px; box-shadow: 0 3px 14px #4d382926; background: #fbf6e9; color: #503f2e; cursor: pointer; font-size: 12px; }
+.retroTools button span { padding-right: 8px; }
+/* All existing production exam/report classes stay intact. */
+[data-retro-ui] .examShell { background: transparent; max-width: 1440px; margin: auto; padding-bottom: 100px; }
+[data-retro-ui] .topbar { padding: 18px 0; border-bottom: 3px double #bba483; color: #635038; }
+[data-retro-ui] .topbar > a:first-child { color: var(--retro-red); font: 700 24px var(--retro-serif); }
+[data-retro-ui] .eyebrow { color: #876137; letter-spacing: .12em; }
+[data-retro-ui] .examEntry { gap: 48px; padding-top: 40px; }
+[data-retro-ui] .examEntry > div:first-child { border: 8px solid #805a3b; padding: 32px; color: #eee7cf; background: var(--retro-paper-texture), var(--retro-board); box-shadow: inset 0 0 20px #0a241a40, var(--shadow); }
+[data-retro-ui] .examEntry > div:first-child h1 { color: #f5edd7; font-family: var(--retro-serif); line-height: 1.4; }
+[data-retro-ui] .examEntry > div:first-child p { color: #d5d8c2; }
+[data-retro-ui] .examSetup, [data-retro-ui] .answerCardPanel, [data-retro-ui] .questionPanel, [data-retro-ui] .aiPanel, [data-retro-ui] .shareCard, [data-retro-ui] .mistakeCard, [data-retro-ui] .emptyState {
+  border: 1px solid var(--line); border-radius: 3px; background: var(--retro-paper-texture), var(--paper-strong); box-shadow: 2px 5px 12px #4b332015;
+}
+[data-retro-ui] .examSetup { border-top: 4px double #a88860; }
+[data-retro-ui] .examSetup h2 { text-align: center; font-size: 30px; line-height: 1.5; }
+[data-retro-ui] .matchForm select, [data-retro-ui] .candidateButton { border-radius: 2px; background: #fffaf0; border-color: #c8b492; }
+[data-retro-ui] .candidateButton.selected { border-color: var(--retro-red); box-shadow: inset 3px 0 0 var(--retro-red); background: #f7e9d5; }
+[data-retro-ui] .candidateButton.selected strong { color: var(--retro-red); }
+[data-retro-ui] .questionPanel { border-top: 5px double #9c8060; }
+[data-retro-ui] .questionPanel h1 { font-size: clamp(20px,2.1vw,30px); line-height: 1.8; font-weight: 600; }
+[data-retro-ui] .questionMeta span, [data-retro-ui] .shareMeta span { border-radius: 2px; font-size: 12px; background: #f1e6d0; }
+[data-retro-ui] .answerCardPanel { border-top: 8px solid #6a5540; }
+[data-retro-ui] .answerGrid button, [data-retro-ui] .choiceGroup button, [data-retro-ui] .hintButtons button { border-radius: 2px; border-color: #c5b193; background: #fbf6e9; min-height: 44px; }
+[data-retro-ui] .answerGrid button.answered { color: #fff9e8; background: var(--retro-board); border-color: var(--retro-board); }
+[data-retro-ui] .choiceGroup button.selected { color: #fff9e8; background: var(--retro-red); border-color: var(--retro-red); }
+[data-retro-ui] .answerGrid button[aria-current="true"] { outline: 2px solid var(--retro-red); outline-offset: 2px; }
+[data-retro-ui] textarea { border-radius: 2px; border-color: #baa584; background: repeating-linear-gradient(transparent 0 31px, #b8a48755 31px 32px), #fffaf0; line-height: 32px; padding: 14px 16px; font-size: 16px; }
+[data-retro-ui] .aiPanel { border-left: 4px solid var(--retro-red); background: #f6edde; }
+[data-retro-ui] .aiPanel h2, [data-retro-ui] .aiPanel h3 { color: var(--retro-red); }
+[data-retro-ui] .hintButtons button:hover { border-color: var(--retro-red); background: #ecdcc1; }
+[data-retro-ui] .saveStatus { font-size: 13px; overflow-wrap: anywhere; }
+[data-retro-ui] .scorePair div, [data-retro-ui] .adminMetricGrid div, [data-retro-ui] .mistakeDetailGrid div { border-radius: 2px; background: var(--retro-paper-texture), #f8efd9; }
+[data-retro-ui] .scorePair strong, [data-retro-ui] .adminMetricGrid strong { font-family: Georgia,var(--retro-serif); color: var(--retro-red); font-variant-numeric: tabular-nums; }
+[data-retro-ui] .questionRow { background: #fffaf0; border-radius: 2px; }
+[data-retro-ui] .questionRow strong { background: var(--retro-red); border-radius: 3px; }
+[data-retro-ui] .reportHero { border-bottom: 3px double #baa483; margin-bottom: 24px; }
+[data-retro-ui] .sharePage { background: repeating-linear-gradient(3deg,#ffffff02 0 2px, transparent 2px 7px), var(--retro-board); padding-bottom: 100px; }
+[data-retro-ui] .shareCard { border-top: 6px double #a48762; }
+[data-retro-ui] .shareCard h1 { font-size: clamp(26px,4vw,46px); line-height: 1.5; }
+[data-retro-ui] .visibilityToggle { border-radius: 2px; }
+/* Real preference, same answers and state. No forced audio or animation. */
+html[data-reading="clean"] { --retro-paper-texture: none; --paper: #f5f2eb; --paper-strong: #fffdf7; }
+html[data-reading="clean"] .retroDesk, html[data-reading="clean"] .retroAdmission { background: #f8f3e9; }
+html[data-reading="clean"] .retroBlackboard { background: #203f37; }
+html[data-reading="clean"] .retroBlackboard::before { display: none; }
+html[data-reading="clean"] .retroAdmission, html[data-reading="clean"] .retroDeskNote { transform: none; }
+html[data-reading="clean"] [data-retro-ui] textarea { background: #fffdf7; }
+html[data-reading="clean"] [data-retro-ui] .examEntry > div:first-child { background: #203f37; }
+@media (max-width:1100px) {
+  .retroHome { padding: 0 28px; }
+  .retroBrand small { display: none; }
+  .retroBlackboard { padding: 30px; }
+  .retroDesk { padding: 24px 16px; }
+  .retroAdmission { padding: 27px 22px; }
+  .retroProcess > div { padding: 4px 10px; gap: 9px; }
+  .retroPrinciples { grid-template-columns: 1fr 1fr; }
+  .retroPrinciples article { min-width: 0; }
+}
+@media (max-width:760px) {
+  .retroHome { padding: 0 16px; }
+  .retroNav { padding: 18px 0; gap: 12px; }
+  .retroNav nav { gap: 14px; font-size: 12px; }
+  .retroNav nav a:last-child { display: none; }
+  .retroBrand { font-size: 20px; }
+  .retroBrand > span { width: 26px; height: 26px; font-size: 20px; }
+  .retroFoyer { grid-template-columns: 1fr; padding-top: 20px; }
+  .retroBlackboard { padding: 24px; border-width: 8px; }
+  .retroBlackboard h1 { font-size: clamp(42px,12vw,68px); }
+  .retroKicker { margin-top: 28px; }
+  .retroChalkLine { font-size: 29px; }
+  .retroBoardCopy { font-size: 13px; margin-bottom: 26px; }
+  .retroBoardTop { font-size: 10px; letter-spacing: 0; }
+  .retroBoardFooter { font-size: 12px; }
+  .retroDesk { padding: 32px 24px 22px; }
+  .retroAdmission { transform: none; padding: 30px 24px; }
+  .retroAdmission h2 { font-size: 34px; }
+  .retroTicketFields dd span { display: inline; margin-left: 10px; }
+  .retroProcess { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 18px 8px; padding: 24px 0; margin-bottom: 28px; }
+  .retroProcess > div { border: 0; padding: 0; gap: 8px; }
+  .retroProcess b { font-size: 21px; }
+  .retroProcess span { font-size: 12px; }
+  .retroProcess small { font-size: 9px; }
+  .retroPrinciples { gap: 24px 16px; }
+  .retroSectionTitle h2 { font-size: 21px; }
+  .retroPrinciples article { padding-left: 16px; }
+  .retroFooter { display: block; }
+  .retroFooter p { margin: 12px 0; }
+  [data-retro-ui] .examShell { padding: 16px 16px 100px; }
+  [data-retro-ui] .examEntry { gap: 24px; padding-top: 24px; grid-template-columns: minmax(0,1fr); }
+  [data-retro-ui] .examEntry > div:first-child { padding: 24px; }
+  [data-retro-ui] .examEntry h1 { font-size: 28px; }
+  [data-retro-ui] .examWorkspace { grid-template-columns: minmax(0,1fr); }
+  [data-retro-ui] .answerCardPanel, [data-retro-ui] .questionPanel, [data-retro-ui] .examSetup { padding: 20px; }
+  [data-retro-ui] .matchForm { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  [data-retro-ui] .matchForm select { min-height: 48px; font-size: 16px; }
+  [data-retro-ui] .hintButtons { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); }
+  [data-retro-ui] .shareCard { padding: 24px; }
+  [data-retro-ui] .shareCard .scorePair { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  [data-retro-ui] .shareCard .scorePair div { padding: 12px; }
+  [data-retro-ui] .scorePair strong { font-size: 42px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-retro-ui] *, [data-retro-ui] *::before, [data-retro-ui] *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+}
+@media print {
+  body[data-retro-ui], [data-retro-ui] .examShell, [data-retro-ui] .sharePage { background: white !important; color: black; }
+  .retroTools, .retroNav nav, [data-retro-ui] .hintButtons, [data-retro-ui] .reportActions, [data-retro-ui] .visibilityControls { display: none !important; }
+  [data-retro-ui] .questionPanel, [data-retro-ui] .shareCard, [data-retro-ui] .mistakeCard { background: white; box-shadow: none; break-inside: avoid; }
+}
