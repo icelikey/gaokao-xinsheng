@@ -110,7 +110,7 @@ export class ExamWorkspace {
     if (this.disposed || isTerminalSession(this.session.state) || this.busy) throw new Error("当前状态不能修改作答。");
   }
   private pendingIds() { return this.paper.questions.filter((q) => (this.answers[q.id] ?? "") !== (this.acknowledged[q.id] ?? "")).map((q) => q.id); }
-  private changed() { this.persist(); for (const listener of this.listeners) listener(); }
+  private changed() { if (this.disposed) return; this.persist(); for (const listener of this.listeners) listener(); }
   private scheduleSave() {
     if (this.timer) clearTimeout(this.timer);
     if (this.debounceMs < 0 || this.disposed || this.conflicts.size) return;
@@ -146,6 +146,7 @@ export class ExamWorkspace {
       const remote = answerText(session.answers[q.id]?.at(-1)?.answer);
       const local = this.answers[q.id] ?? "";
       const base = this.acknowledged[q.id] ?? "";
+      if (remote === local || isTerminalSession(session.state)) this.conflicts.delete(q.id);
       if (local !== base && !isTerminalSession(session.state)) {
         if (remote !== base && remote !== local) this.conflicts.add(q.id);
       } else this.answers[q.id] = remote;
@@ -160,6 +161,7 @@ export class ExamWorkspace {
   }
   async refresh() {
     if (this.busy || this.flushing) throw new Error("请等待当前操作完成后再恢复。");
+    if (this.timer) { clearTimeout(this.timer); this.timer = null; }
     this.busy = "refresh"; this.error = ""; this.changed();
     try {
       this.applyRemote(await this.transport.refresh()); this.refreshRequired = false;
@@ -170,6 +172,7 @@ export class ExamWorkspace {
   flush(): Promise<void> {
     if (this.flushing) return this.flushing;
     if (this.disposed) return Promise.reject(new Error("页面已经关闭。"));
+    if (this.busy === "refresh") return Promise.reject(new Error("正在恢复服务器状态，请完成后再同步。"));
     if (this.timer) { clearTimeout(this.timer); this.timer = null; }
     // A microtask ensures the promise is assigned before cleanup, including an empty queue.
     this.flushing = Promise.resolve().then(async () => {
@@ -237,7 +240,7 @@ export class ExamWorkspace {
   private persist() {
     if (!this.storage) return;
     try {
-      const pending = Object.fromEntries(this.pendingIds().map((id) => [id, { value: this.answers[id], base: this.acknowledged[id] ?? "" }]));
+      const pending = Object.fromEntries(this.pendingIds().map((id) => [id, { value: this.answers[id], base: this.acknowledged[id] ?? "", conflicted: this.conflicts.has(id) }]));
       this.storage.setItem(this.cacheKey, JSON.stringify({ version: 1, sessionId: this.session.id, paperId: this.paper.id, savedAt: this.now(), currentIndex: this.currentIndex, pending, scratch: this.scratch, marked: [...this.marked] }));
       this.storageWarning = "";
     } catch { this.storageWarning = "本机存储不可用或空间不足；未同步内容仅在内存，请保持页面打开或导出备份。"; }
@@ -260,7 +263,7 @@ export class ExamWorkspace {
         if (q.type === "single_choice" && !q.options?.includes(pending.value)) continue;
         const remote = this.acknowledged[q.id] ?? "";
         this.answers[q.id] = pending.value;
-        if (remote !== pending.base && remote !== pending.value) this.conflicts.add(q.id);
+        if (remote !== pending.value && (remote !== pending.base || pending.conflicted === true)) this.conflicts.add(q.id);
       }
       if (this.conflicts.size) this.message = "本机草稿与服务器答案不同，请确认后再同步。";
       else if (this.pendingIds().length) this.message = "已找回未同步作答，请点击“同步全部答案”。";

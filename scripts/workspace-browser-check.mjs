@@ -92,7 +92,7 @@ try {
   await page.getByRole("button", { name: "暂离一下", exact: true }).click();
   assert.ok(await page.getByRole("dialog").isVisible());
   await page.keyboard.press("Escape");
-  assert.equal(await page.getByRole("dialog").isVisible(), false);
+  await page.getByRole("dialog").waitFor({ state: "hidden" });
   checks.push("native rest dialog supports Escape and returns to exam");
   await page.getByRole("button", { name: "检查并交卷", exact: true }).click();
   await page.getByRole("button", { name: "确认交卷", exact: true }).click();
