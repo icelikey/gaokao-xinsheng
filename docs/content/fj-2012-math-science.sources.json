@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "source-inventory/1",
+  "id": "fj-2012-math-science-source-v1",
+  "title": "2012年福建高考数学试卷（理工农医类）",
+  "year": 2012,
+  "region": "福建",
+  "track": "理科",
+  "subject": "数学",
+  "status": "STAGING",
+  "totalScore": 150,
+  "durationMinutes": null,
+  "examDate": null,
+  "source": {
+    "articleUrl": "https://www.eeafj.cn/systsj/20120608/2148.html",
+    "publisher": "福建省教育考试院",
+    "publishedAt": "2012-06-08 21:05",
+    "checkedAt": "2026-09-17",
+    "method": "VISUAL_TRANSCRIPTION_FIRST_PASS",
+    "note": "发布日期不是考试日期。视觉读取不是本地原图下载，也不等于人工教研复核。"
+  },
+  "selectionSummary": {
+    "numberedQuestions": 21,
+    "structuredItems": 23,
+    "chooseTwoOfThree": true,
+    "rawItemScoreSum": 157,
+    "selectableMaxScore": 150,
+    "overAnswerPolicy": "FIRST_TWO"
+  },
+  "assets": [
+    {"id":"scan-1","url":"https://www.eeafj.cn/u/cms/default/201206/1339161560421_sxlkst_1.jpg","printedPage":14,"status":"VISUALLY_READ","sha256":null},
+    {"id":"scan-2","url":"https://www.eeafj.cn/u/cms/default/201206/1339161577521_sxlkst_2.jpg","printedPage":15,"status":"VISUALLY_READ","sha256":null},
+    {"id":"scan-3","url":"https://www.eeafj.cn/u/cms/default/201206/1339161615698_sxlkst_3.jpg","printedPage":16,"status":"VISUALLY_READ","sha256":null},
+    {"id":"scan-4","url":"https://www.eeafj.cn/u/cms/default/201206/1339161653192_sxlkda_2.jpg","printedPage":17,"status":"VISUALLY_READ","sha256":null},
+    {"id":"scan-5","url":"https://www.eeafj.cn/u/cms/default/201206/1339161668061_sxlkda_3.jpg","printedPage":18,"status":"UNAVAILABLE","sha256":null},
+    {"id":"scan-6","url":"https://www.eeafj.cn/u/cms/default/201206/1339161686121_sxlkda_4.jpg","printedPage":19,"status":"VISUALLY_READ","sha256":null},
+    {"id":"scan-7","url":"https://www.eeafj.cn/u/cms/default/201206/1339161702209_sxlkda_5.jpg","printedPage":20,"status":"VISUALLY_READ","sha256":null}
+  ],
+  "releaseBlockers": [
+    "完整题干及答案首稿通过私有交付保管，不公开嵌入仓库。",
+    "补齐印刷页18参考解答；18、19题参考答案未完整。",
+    "独立人工复核题面、公式、选项、答案；首校不是批准。",
+    "图题裁切复核并落入私有素材存储。",
+    "参考解答不自动转成官方逐步评分细则。",
+    "选考运行时、正式目录与受控发布API另行实施。"
+  ]
+}

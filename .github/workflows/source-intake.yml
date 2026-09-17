@@ -1,0 +1,59 @@
+name: Source intake checks
+on:
+  pull_request:
+    paths:
+      - 'apps/web/src/lib/source-intake.ts'
+      - 'apps/web/src/app/admin/papers/**'
+      - 'scripts/*source*'
+      - 'docs/content/**'
+      - '.github/workflows/source-intake.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'apps/web/src/lib/source-intake.ts'
+      - 'apps/web/src/app/admin/papers/**'
+      - 'scripts/*source*'
+      - 'docs/content/**'
+      - '.github/workflows/source-intake.yml'
+permissions:
+  contents: read
+jobs:
+  source-intake:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      NEXT_PUBLIC_APP_ENV: local
+      EXAM_STORE_BACKEND: memory
+      SUPABASE_STORE_ADAPTER_ENABLED: 'false'
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: node --experimental-strip-types --test scripts/source-intake-check.mjs
+      - run: python3 scripts/source-download-check.py
+      - run: python3 scripts/acquire-exam-source.py
+      - run: pnpm build
+      - name: Install isolated browser test tools
+        run: |
+          npm install --prefix "$RUNNER_TEMP/gx-source-browser" --no-package-lock --ignore-scripts playwright@1.58.0
+          node "$RUNNER_TEMP/gx-source-browser/node_modules/playwright/cli.js" install --with-deps chromium
+      - name: Exercise intake with ORIGINAL synthetic fixtures only
+        run: |
+          mkdir -p output/source-intake-e2e
+          pnpm --filter @gaokao-xinsheng/web exec next start -H 127.0.0.1 -p 3101 > output/source-intake-e2e/server.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          GX_BROWSER_MODULE="$RUNNER_TEMP/gx-source-browser/node_modules/playwright" node scripts/source-browser-check.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: source-intake-browser-evidence
+          path: output/source-intake-e2e/
+          retention-days: 7

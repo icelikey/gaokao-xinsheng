@@ -27,40 +27,22 @@ export default function AdminPapersPage() {
           <Link className="secondaryButton darkButton" href="/admin/papers/import">
             导入演练
           </Link>
+          <Link className="secondaryButton darkButton" href="/admin/papers/intake">
+            真题来源整理
+          </Link>
         </div>
       </section>
 
       <section className="adminMetricGrid">
-        <div>
-          <strong>{stats.total}</strong>
-          <span>题目</span>
-        </div>
-        <div>
-          <strong>{stats.maxScore}</strong>
-          <span>总分</span>
-        </div>
-        <div>
-          <strong>{stats.byType.single_choice}</strong>
-          <span>选择</span>
-        </div>
-        <div>
-          <strong>{stats.byType.fill_blank}</strong>
-          <span>填空</span>
-        </div>
-        <div>
-          <strong>{stats.byType.free_response}</strong>
-          <span>解答</span>
-        </div>
+        <div><strong>{stats.total}</strong><span>题目</span></div>
+        <div><strong>{stats.maxScore}</strong><span>总分</span></div>
+        <div><strong>{stats.byType.single_choice}</strong><span>选择</span></div>
+        <div><strong>{stats.byType.fill_blank}</strong><span>填空</span></div>
       </section>
 
       <section className="paperList">
         <article className="paperRow">
-          <div>
-            <h2>{mvpPaper.title}</h2>
-            <p>
-              状态：{mvpPaper.status} · 题库ID：{mvpPaper.id}
-            </p>
-          </div>
+          <div><h2>{mvpPaper.title}</h2><p>状态：{mvpPaper.status} · 题库ID：{mvpPaper.id}</p></div>
           <Link href={`/admin/papers/${mvpPaper.id}`}>打开</Link>
         </article>
       </section>
