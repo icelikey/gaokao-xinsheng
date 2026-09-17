@@ -12,3 +12,7 @@ coverage/
 *.tsbuildinfo
 supabase/.temp/
 apps/web/public/preview/*.tmp
+# Licensed source bodies and raw scans are not public code assets.
+private-content/
+*.source.json
+*.source-package.zip
