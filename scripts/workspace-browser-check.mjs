@@ -1,0 +1,113 @@
+import { createRequire } from "node:module";
+import assert from "node:assert/strict";
+import { mkdir, writeFile } from "node:fs/promises";
+const require = createRequire(import.meta.url);
+const { chromium } = require(process.env.GX_BROWSER_MODULE || "playwright");
+const base = process.env.GX_BASE_URL || "http://127.0.0.1:3100";
+// This script writes synthetic test sessions only to an explicitly local server.
+assert.ok(/^http:\/\/(127\.0\.0\.1|localhost):\d+$/.test(base), "Do not run this fixture against a hosted/production server");
+const out = "output/workspace-e2e";
+await mkdir(out, { recursive: true });
+const checks = [];
+const errors = [];
+async function until(fn, label, timeout = 30000) {
+  const end = Date.now() + timeout;
+  while (Date.now() < end) { if (await fn()) return; await new Promise((r) => setTimeout(r, 150)); }
+  throw new Error(`Timeout: ${label}`);
+}
+await until(async () => { try { return (await fetch(`${base}/api/health`)).ok; } catch { return false; } }, "server ready", 60000);
+const browser = await chromium.launch({ headless: true });
+const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, locale: "zh-CN" });
+const page = await context.newPage();
+page.on("pageerror", (e) => errors.push(e.message));
+await context.tracing.start({ screenshots: true, snapshots: true });
+const api = async (path, data) => {
+  const response = data === undefined ? await context.request.get(`${base}${path}`) : await context.request.post(`${base}${path}`, { data });
+  const payload = await response.json();
+  assert.ok(response.ok() && payload.data && !payload.error, `${path}: ${JSON.stringify(payload.error)}`);
+  return payload.data;
+};
+try {
+  const session = await api("/api/v1/exam-sessions", { paper_id: "paper_2010_sd_math_sci_mvp", mode: "QUICK_15", settings: { timer_mode: "RELAXED", paper_style: true, exam_audio: false, ai_tutor_enabled: true } });
+  const root = `/api/v1/exam-sessions/${session.id}`;
+  await api(`${root}/start`, {});
+  await page.goto(`${base}/exam/${session.id}`);
+  await page.locator("#question-heading").waitFor();
+  assert.ok(await page.getByText("流程演示样卷", { exact: false }).isVisible());
+  assert.ok((await page.locator(".workspaceChoices button").nth(1).innerText()).includes("1 < x < 4"));
+  checks.push("session-specific public paper + full option labels + sample disclaimer");
+  for (const width of [375, 390, 768, 1440]) {
+    await page.setViewportSize({ width, height: 1000 });
+    assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), `horizontal overflow at ${width}`);
+    if (width === 390 || width === 1440) await page.screenshot({ path: `${out}/exam-${width}.png`, fullPage: true });
+  }
+  checks.push("no horizontal overflow at 375/390/768/1440px");
+  await page.locator(".workspaceChoices button").nth(1).click();
+  await page.locator(".workspaceAnswerGrid button").nth(12).click();
+  await page.getByLabel("填写答案", { exact: true }).fill("8");
+  await page.getByRole("button", { name: "同步全部答案", exact: true }).click();
+  await until(async () => { const s = await api(root); return s.answers.q_2010_sd_math_01?.at(-1)?.answer.value === "B" && s.answers.q_2010_sd_math_13?.at(-1)?.answer.value === "8"; }, "both answers saved");
+  checks.push("switching questions drains all saved answers through real API");
+  await page.getByRole("button", { name: "打开草稿纸", exact: true }).click();
+  await page.getByLabel(/本机草稿/).fill("我的本机草稿，不发送给AI");
+  await page.getByRole("button", { name: "标记这道题", exact: true }).click();
+  await page.reload(); await page.getByLabel("填写答案", { exact: true }).waitFor();
+  assert.equal(await page.getByLabel("填写答案", { exact: true }).inputValue(), "8");
+  await page.getByRole("button", { name: "打开草稿纸", exact: true }).click();
+  assert.equal(await page.getByLabel(/本机草稿/).inputValue(), "我的本机草稿，不发送给AI");
+  assert.ok(await page.getByRole("button", { name: "已标记，取消", exact: true }).isVisible());
+  assert.equal(JSON.stringify(await api(root)).includes("我的本机草稿"), false);
+  checks.push("reload restores position, mark and local-only scratch without transmitting notes");
+  let hintCalls = 0, submitCalls = 0;
+  page.on("request", (request) => { if (request.url().endsWith("/ai-help")) hintCalls++; if (request.url().endsWith("/submit")) submitCalls++; });
+  await page.route("**/answers/**", (route) => route.fulfill({ status: 503, contentType: "application/json", body: JSON.stringify({ data: null, error: { message: "测试断网：保存失败" } }) }));
+  await page.getByLabel("填写答案", { exact: true }).fill("9");
+  await page.locator(".workspaceHints button").first().click();
+  await page.getByText("测试断网：保存失败", { exact: true }).first().waitFor();
+  assert.equal(hintCalls, 0);
+  await page.getByRole("button", { name: "检查并交卷", exact: true }).click();
+  await page.getByRole("button", { name: "确认交卷", exact: true }).click();
+  await until(async () => await page.getByRole("button", { name: "返回检查", exact: true }).isEnabled(), "failed submit unlocked");
+  assert.equal(submitCalls, 0);
+  await page.getByRole("button", { name: "返回检查", exact: true }).click();
+  await page.unroute("**/answers/**");
+  await page.getByRole("button", { name: "同步全部答案", exact: true }).click();
+  await until(async () => (await api(root)).answers.q_2010_sd_math_13.at(-1).answer.value === "9", "recovered save");
+  checks.push("injected save failure blocks both hints and submit, then recovery resends");
+  await page.locator(".workspaceHints button").first().click();
+  await page.locator(".workspaceHintHistory article").first().waitFor();
+  await until(async () => await page.getByLabel("填写答案", { exact: true }).isEnabled(), "hint state refreshed");
+  let current = await api(root);
+  const baselineId = current.aiHelpEvents[0].preAiVersionId;
+  assert.equal(current.answers.q_2010_sd_math_13.find((v) => v.id === baselineId)?.answer.value, "9");
+  await page.getByLabel("填写答案", { exact: true }).fill("8");
+  await page.getByRole("button", { name: "同步全部答案", exact: true }).click();
+  await until(async () => (await api(root)).answers.q_2010_sd_math_13.at(-1).answer.value === "8", "post-hint saved");
+  current = await api(root);
+  assert.equal(current.answers.q_2010_sd_math_13.find((v) => v.id === baselineId)?.answer.value, "9");
+  checks.push("real server preserves pre-hint snapshot despite later answer changes");
+  await page.screenshot({ path: `${out}/tutor-desktop.png`, fullPage: true });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.screenshot({ path: `${out}/tutor-mobile.png`, fullPage: true });
+  await page.getByRole("button", { name: "暂离一下", exact: true }).click();
+  assert.ok(await page.getByRole("dialog").isVisible());
+  await page.keyboard.press("Escape");
+  await page.getByRole("dialog").waitFor({ state: "hidden" });
+  checks.push("native rest dialog supports Escape and returns to exam");
+  await page.getByRole("button", { name: "检查并交卷", exact: true }).click();
+  await page.getByRole("button", { name: "确认交卷", exact: true }).click();
+  await page.waitForURL("**/reports/**");
+  assert.equal(submitCalls, 1);
+  assert.equal((await api(root)).state, "GRADED");
+  checks.push("actual submission navigates to report and locks server session");
+  await page.goto(`${base}/exam/${session.id}`); await page.getByText("这场考试已结束。", { exact: true }).waitFor();
+  assert.equal(await page.getByRole("button", { name: "检查并交卷", exact: true }).isEnabled(), false);
+  checks.push("reload of submitted exam is read-only");
+  assert.deepEqual(errors, []);
+  console.log(JSON.stringify({ passed: true, checks }, null, 2));
+  await writeFile(`${out}/results.json`, JSON.stringify({ passed: true, scope: "Next.js + memory fixture + Chromium, not hosted Supabase/model/WeChat", checks, errors }, null, 2));
+} catch (error) {
+  await page.screenshot({ path: `${out}/failure.png`, fullPage: true }).catch(() => undefined);
+  await writeFile(`${out}/results.json`, JSON.stringify({ passed: false, checks, errors, error: String(error) }, null, 2));
+  throw error;
+} finally { await context.tracing.stop({ path: `${out}/trace.zip` }); await browser.close(); }

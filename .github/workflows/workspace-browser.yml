@@ -1,0 +1,47 @@
+name: Exam workspace browser checks
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: workspace-browser-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      NEXT_PUBLIC_APP_ENV: local
+      EXAM_STORE_BACKEND: memory
+      SUPABASE_STORE_ADAPTER_ENABLED: 'false'
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - name: Install isolated browser test tools (not a product dependency)
+        run: |
+          npm install --prefix "$RUNNER_TEMP/gx-browser" --no-package-lock --ignore-scripts playwright@1.58.0
+          node "$RUNNER_TEMP/gx-browser/node_modules/playwright/cli.js" install --with-deps chromium
+      - name: Exercise actual Next routes with the memory fixture
+        run: |
+          mkdir -p output/workspace-e2e
+          pnpm --filter @gaokao-xinsheng/web exec next start -H 127.0.0.1 -p 3100 > output/workspace-e2e/server.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          GX_BROWSER_MODULE="$RUNNER_TEMP/gx-browser/node_modules/playwright" GX_BASE_URL=http://127.0.0.1:3100 node scripts/workspace-browser-check.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: exam-workspace-browser-evidence
+          path: output/workspace-e2e/
+          retention-days: 7
