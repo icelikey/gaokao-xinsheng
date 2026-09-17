@@ -1,0 +1,114 @@
+/* Scoped retro workspace. Decoration never obscures the question or answer. */
+.workspacePage { --ws-red: #9e382e; --ws-green: #244c40; --ws-paper: #fbf4e2; --ws-ink: #302c26; color: var(--ws-ink); }
+.workspaceLoading { max-width: 1100px; margin: auto; }
+.workspaceLoading > section { margin-top: 28px; }
+.workspaceTopbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 8px 0 22px; border-bottom: 2px solid #655345; }
+.workspaceBrand { display: flex; align-items: center; gap: 12px; font-size: 22px; font-family: "Songti SC", "SimSun", serif; }
+.workspaceBrand b { display: grid; place-items: center; width: 45px; height: 45px; border: 2px solid var(--ws-red); color: var(--ws-red); font-size: 28px; transform: rotate(-6deg); }
+.workspaceBrand small { display: block; font: 12px/2 system-ui, sans-serif; color: #655345; }
+.workspaceClock { display: flex; align-items: center; gap: 14px; }
+.workspaceClock > span { font-size: 12px; color: #665d51; }
+.workspaceClock strong { background: #29372f; color: #f7edcf; padding: 9px 14px; font: 26px/1.15 ui-monospace, monospace; min-width: 112px; text-align: center; font-variant-numeric: tabular-nums; }
+.workspacePage button { cursor: pointer; font: inherit; }
+.workspacePage button:disabled { cursor: not-allowed; opacity: .52; }
+.workspacePage button:focus-visible, .workspacePage a:focus-visible, .workspacePage textarea:focus-visible { outline: 3px solid #357663; outline-offset: 3px; }
+.workspaceClock button, .workspaceBottom button, .workspaceScratchTools button { border: 0; background: transparent; color: var(--ws-red); min-height: 44px; text-decoration: underline; text-underline-offset: 4px; }
+.workspacePreviewNote { margin: 16px 0 0; padding: 10px 14px; background: #ede6d4; border-left: 3px solid #8f7d59; color: #564c3d; font-size: 12px; line-height: 1.8; }
+.workspaceColumns { grid-template-columns: 255px minmax(0, 1fr); gap: 26px; padding-top: 24px; }
+.workspaceColumns > * { min-width: 0; }
+.workspaceAnswerCard { position: sticky; top: 20px; padding: 22px; }
+.workspaceAnswerCard h2 { display: flex; align-items: baseline; gap: 7px; font: 20px/1.4 ui-monospace, monospace; }
+.workspaceAnswerCard h2 strong { font-size: 38px; color: var(--ws-red); }
+.workspaceAnswerCard h2 small { font: 12px/1.4 system-ui, sans-serif; margin-left: auto; }
+.workspaceFilters { display: flex; gap: 5px; margin-top: 16px; }
+.workspaceFilters button { flex: 1; padding: 6px; min-height: 38px; border: 1px solid #cfc2a6; background: transparent; color: #514a3c; font-size: 12px; }
+.workspaceFilters button[aria-pressed="true"] { color: #fff8ea; background: var(--ws-green); border-color: var(--ws-green); }
+.workspaceAnswerGrid { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.workspaceAnswerGrid button { position: relative; min-height: 38px; border-radius: 2px; background: #faf3e2; color: #3b463e; border: 1px solid #c3b59a; }
+.workspaceAnswerGrid button.answered { background: var(--ws-green); border-color: var(--ws-green); color: #fff9e9; }
+.workspaceAnswerGrid button[aria-current] { outline: 2px solid var(--ws-red); outline-offset: 2px; }
+.workspaceAnswerGrid button.marked::after { content: ""; position: absolute; top: 0; right: 0; border-top: 8px solid #b36926; border-left: 8px solid transparent; }
+.workspaceAnswerGrid button.conflicted { border: 2px dashed var(--ws-red); }
+.workspaceAnswerGrid i { position: absolute; width: 5px; height: 5px; border-radius: 50%; bottom: 3px; right: 3px; background: #dda345; }
+.workspaceLegend, .workspaceFootnote, .workspaceMuted { font-size: 12px; line-height: 1.8; color: #695d4b; }
+.workspaceSaveBox { margin: 20px 0 12px; padding: 12px 0; border-top: 1px dashed #c7b794; font-size: 12px; }
+.workspaceSaveBox strong { color: var(--ws-green); }
+.workspaceSaveBox p { margin: 5px 0 0; line-height: 1.7; color: #695d4b; }
+.workspaceAnswerCard .submitButton { margin-top: 10px; }
+.workspaceQuestion { padding: 28px 36px; background-color: var(--ws-paper); }
+.workspacePaperTitle { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; padding-bottom: 14px; margin-bottom: 22px; border-bottom: 2px solid #655345; color: #625848; font: 13px/1.7 "Songti SC", "SimSun", serif; }
+.workspaceQuestion .questionMeta { align-items: center; }
+.workspaceQuestion .questionMeta span { padding: 5px 10px; border-radius: 2px; font-size: 12px; }
+.workspaceQuestion .questionMeta button { margin-left: auto; border: 1px solid #cab996; border-radius: 2px; color: #76501d; background: transparent; padding: 8px 10px; min-height: 38px; font-size: 12px; }
+.workspaceQuestion h1 { font-family: "Songti SC", "SimSun", serif; font-size: clamp(21px, 2vw, 28px); font-weight: 600; line-height: 1.85; white-space: pre-wrap; overflow-wrap: anywhere; margin: 26px 0; }
+.workspaceChoices { grid-template-columns: 1fr; gap: 10px; }
+.workspaceChoices button { display: flex; align-items: center; gap: 16px; padding: 13px 16px; min-height: 54px; text-align: left; background: #fff9ed; border-radius: 2px; font-weight: 400; }
+.workspaceChoices button b { display: grid; place-items: center; width: 29px; height: 29px; border: 1px solid currentColor; border-radius: 50%; flex-shrink: 0; font: 16px/1 ui-monospace, monospace; }
+.workspaceChoices button.selected { background: #e9eee3; color: var(--ws-green); border-color: var(--ws-green); }
+.workspaceChoices span { white-space: pre-wrap; overflow-wrap: anywhere; }
+.workspaceAnswerLabel { display: block; margin-top: 24px; color: #665943; font-size: 13px; }
+.workspaceAnswerLabel textarea { display: block; min-height: 175px; margin: 10px 0 0; font: 17px/1.9 "Songti SC", "SimSun", serif; background: #fffaf0; }
+.workspaceScratchTools { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; margin-top: 14px; }
+.workspaceScratchTools span { font-size: 12px; color: #695d4b; }
+.workspaceScratch { padding: 18px; margin: 6px 0 16px; border: 1px solid #cdbd9c; background: #f3ead2; }
+.workspaceScratch label { display: block; font-size: 13px; color: #665943; }
+.workspaceScratch textarea { margin: 12px 0; min-height: 185px; border: 0; border-radius: 0; line-height: 30px; padding: 0 6px; background: repeating-linear-gradient(transparent, transparent 29px, #cfc1a4 29px, #cfc1a4 30px); }
+.workspaceScratch button { border: 1px solid #998766; background: #fcf7e9; color: #564833; padding: 10px 12px; }
+.workspaceScratch small { display: block; margin-top: 12px; line-height: 1.7; color: #695d4b; }
+.workspaceQuestionNavigation { justify-content: space-between; align-items: center; margin-top: 20px; }
+.workspaceQuestionNavigation span { color: #695d4b; font: 13px/1 ui-monospace, monospace; }
+.workspaceTutor { background: #f6f0de; border: 1px solid #c7b68f; border-left: 4px solid var(--ws-red); gap: 16px; margin-top: 34px; }
+.workspaceTutorHeader { display: flex; gap: 14px; align-items: center; }
+.workspaceTutorHeader > span { border: 1px solid var(--ws-red); color: var(--ws-red); padding: 8px 10px; font: 25px/1.2 "Songti SC", "SimSun", serif; }
+.workspaceTutorHeader .eyebrow { color: #76644a; font-size: 11px; margin-bottom: 5px; }
+.workspaceTutorHeader h2 { font: 22px/1.5 "Songti SC", "SimSun", serif; margin-bottom: 0; }
+.workspaceHints { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.workspaceHints button { min-height: 58px; padding: 8px; background: #fff9eb; color: #4a4031; border-radius: 2px; font-size: 13px; font-weight: 500; }
+.workspaceHints small { display: block; color: var(--ws-red); font: 12px/1.5 ui-monospace, monospace; margin-bottom: 3px; }
+.workspaceHintHistory { max-height: 400px; overflow-y: auto; }
+.workspaceHintHistory article { padding: 14px; background: #fffaf0; border: 1px dashed #c4b28c; margin-top: 10px; }
+.workspaceHintHistory article b { color: var(--ws-red); font-size: 12px; }
+.workspaceHintHistory article p { margin-top: 7px; font-size: 15px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.workspaceHintEmpty { font-size: 13px; }
+.workspaceNotice, .workspaceWarning { padding: 14px 18px; margin-top: 16px; border: 1px solid #baa075; background: #fff1d4; color: #603d20; font-size: 14px; line-height: 1.8; }
+.workspaceWarning p { margin-bottom: 6px; }
+.workspaceNotice a { display: inline-block; margin-left: 16px; text-decoration: underline; }
+.workspaceInlineActions { display: flex; gap: 10px; flex-wrap: wrap; }
+.workspaceInlineActions button { padding: 9px 12px; border: 1px solid #a18257; color: #603d20; background: #fff9eb; }
+.workspaceBottom { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; padding-top: 22px; font-size: 12px; color: #695d4b; }
+.workspaceBottom > div { display: flex; gap: 12px; flex-wrap: wrap; }
+.workspaceDialog { width: min(520px, calc(100vw - 32px)); max-height: calc(100dvh - 40px); overflow-y: auto; padding: 30px; border: 1px solid #9b8963; border-radius: 3px; color: #332d23; background: #faf2dd; box-shadow: 0 16px 60px #0005; }
+.workspaceDialog::backdrop { background: #15221bd9; }
+.workspaceDialog h2 { font: 25px/1.5 "Songti SC", "SimSun", serif; }
+.workspaceDialog p { line-height: 1.9; color: #66513a; }
+.workspaceDialogActions { display: flex; gap: 12px; justify-content: flex-end; flex-wrap: wrap; margin-top: 24px; }
+.workspaceDialogActions button { min-height: 44px; border: 1px solid #b19b76; padding: 10px 18px; font: inherit; background: transparent; color: #514331; }
+.workspaceDialog .primaryButton { color: #fff7e7; background: #96362d; }
+.workspaceDialog p.workspaceDialogError { color: #982c25; border-left: 3px solid #982c25; padding-left: 10px; }
+@media (max-width: 980px) { .workspaceColumns { grid-template-columns: 210px minmax(0, 1fr); gap: 16px; } .workspaceAnswerCard { padding: 16px; } .workspaceQuestion { padding: 22px; } .workspaceHints { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 700px) {
+  .workspacePage { padding: 16px 12px 36px; }
+  .workspaceTopbar { gap: 12px; flex-wrap: wrap; }
+  .workspaceBrand { font-size: 19px; }
+  .workspaceClock { margin-left: auto; gap: 8px; }
+  .workspaceClock > span { display: none; }
+  .workspaceClock strong { font-size: 21px; min-width: 90px; }
+  .workspaceClock button { font-size: 12px; }
+  .workspaceTopbar > button { width: 100%; min-height: 36px; }
+  .workspaceColumns { grid-template-columns: 1fr; padding-top: 16px; }
+  .workspaceAnswerCard { position: static; }
+  .workspaceAnswerGrid { grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 5px; }
+  .workspaceAnswerGrid button { min-height: 32px; font-size: 12px; }
+  .workspaceAnswerCard h2 { margin-bottom: 8px; }
+  .workspaceAnswerCard .workspaceSaveBox { margin-top: 12px; }
+  .workspaceFilters { margin-top: 8px; }
+  .workspaceQuestion { padding: 20px 16px; }
+  .workspaceQuestion .questionMeta button { margin-left: 0; }
+  .workspaceQuestionNavigation { flex-wrap: nowrap; gap: 12px; }
+  .workspaceQuestionNavigation button { width: auto; flex: 1; font-size: 13px; padding: 0 12px; }
+  .workspaceTutor { padding: 16px; }
+  .workspaceTutorHeader h2 { font-size: 20px; }
+  .workspaceDialog { padding: 24px; }
+}
+@media (max-width: 380px) { .workspaceAnswerGrid { grid-template-columns: repeat(6, minmax(0, 1fr)); } .workspaceClock { width: 100%; margin-left: 0; justify-content: space-between; } .workspaceTopbar > button { width: auto; } }
+@media print { .workspaceTopbar, .workspaceAnswerCard, .workspaceTutor, .workspaceBottom, .workspaceQuestionNavigation, .workspaceScratchTools { display: none; } .workspaceColumns { display: block; } .workspaceQuestion { border: 0; background: #fff; color: #000; } }

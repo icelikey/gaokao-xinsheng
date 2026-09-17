@@ -23,7 +23,8 @@
     "test:supabase-hosted-smoke": "tsx scripts/supabase-hosted-smoke.ts",
     "test:miniprogram-contract": "tsx scripts/miniprogram-contract-check.ts",
     "test:retro-ui": "node --test scripts/retro-ui-check.mjs",
-    "verify": "pnpm lint && pnpm typecheck && pnpm test:ai-golden && pnpm test:grading-golden && pnpm test:catalog-contract && pnpm test:runtime-contract && pnpm test:report-contract && pnpm test:share-edge-cases && pnpm test:review-workflow && pnpm test:paper-import && pnpm test:deployment-contract && pnpm test:prd-traceability && pnpm test:store-backend && pnpm test:supabase-contract && pnpm test:miniprogram-contract && pnpm test:retro-ui && pnpm build"
+    "verify": "pnpm lint && pnpm typecheck && pnpm test:ai-golden && pnpm test:grading-golden && pnpm test:catalog-contract && pnpm test:runtime-contract && pnpm test:report-contract && pnpm test:share-edge-cases && pnpm test:review-workflow && pnpm test:paper-import && pnpm test:deployment-contract && pnpm test:prd-traceability && pnpm test:store-backend && pnpm test:supabase-contract && pnpm test:miniprogram-contract && pnpm test:retro-ui && pnpm test:exam-workspace && pnpm build",
+    "test:exam-workspace": "tsx --test scripts/exam-workspace-check.ts"
   },
   "devDependencies": {
     "@gaokao-xinsheng/ai-tutor": "workspace:*",
