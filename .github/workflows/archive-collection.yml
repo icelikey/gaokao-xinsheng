@@ -1,6 +1,7 @@
 name: Historical archive collection
 on:
   pull_request:
+    types: [opened]
     paths:
       - 'scripts/archive/**'
       - 'docs/content/archive-recipient.pub.pem'
