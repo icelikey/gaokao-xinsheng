@@ -1,0 +1,44 @@
+name: Historical archive gap followup
+on:
+  pull_request:
+    types: [synchronize]
+permissions:
+  contents: read
+jobs:
+  collect:
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'feat/archive-2000-2025-20260919' && github.event.before == '4d3c299616d221342c5aa7c959ba5669ce7bd01b'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: python3 -m unittest discover -s scripts/archive -p 'test_*.py' -v
+      - name: Collect published pagination and known missing files
+        run: |
+          mkdir -p "$RUNNER_TEMP/gx-private" "$RUNNER_TEMP/gx-deliver"
+          python3 scripts/archive/followup.py --output "$RUNNER_TEMP/gx-private" --pending docs/content/math-pending-round2.json.gz.b64 --max-mb 450 --seconds 600 --max-records 900
+      - name: Encrypt private source files
+        run: |
+          python3 - <<'PY'
+          import os,pathlib,shutil
+          p=pathlib.Path(os.environ['RUNNER_TEMP'])
+          shutil.make_archive(str(p/'gx-plain'),'zip',p/'gx-private')
+          shutil.copyfile(p/'gx-private/inventory.json',p/'gx-deliver/inventory.json')
+          PY
+          node scripts/archive/envelope.mjs "$RUNNER_TEMP/gx-plain.zip" docs/content/archive-recipient.pub.pem "$RUNNER_TEMP/gx-deliver/corpus.gxa"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: historical-archive-followup-encrypted
+          path: |
+            ${{ runner.temp }}/gx-deliver/corpus.gxa
+            ${{ runner.temp }}/gx-deliver/inventory.json
+          retention-days: 1
+          if-no-files-found: error
+          compression-level: 0
+      - name: Remove transient plaintext
+        if: always()
+        run: rm -rf "$RUNNER_TEMP/gx-private" "$RUNNER_TEMP/gx-plain.zip" "$RUNNER_TEMP/gx-deliver"
