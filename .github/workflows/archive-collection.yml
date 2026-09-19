@@ -1,0 +1,49 @@
+name: Historical archive collection
+on:
+  pull_request:
+    types: [opened]
+    paths:
+      - 'scripts/archive/**'
+      - 'docs/content/archive-recipient.pub.pem'
+      - '.github/workflows/archive-collection.yml'
+permissions:
+  contents: read
+jobs:
+  collect:
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'feat/archive-2000-2025-20260919'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check bounded collector
+        run: python3 -m unittest discover -s scripts/archive -p 'test_*.py' -v
+      - name: Collect source files privately on runner
+        run: |
+          mkdir -p "$RUNNER_TEMP/gx-private" "$RUNNER_TEMP/gx-deliver"
+          python3 scripts/archive/collect.py --output "$RUNNER_TEMP/gx-private" --max-mb 350 --seconds 600 --max-records 800 --max-listings 90
+      - name: Encrypt corpus before artifact upload
+        run: |
+          python3 - <<'PY'
+          import os, pathlib, shutil
+          root=pathlib.Path(os.environ['RUNNER_TEMP'])
+          shutil.make_archive(str(root/'gx-plain'),'zip',root/'gx-private')
+          shutil.copyfile(root/'gx-private/inventory.json',root/'gx-deliver/inventory.json')
+          PY
+          node scripts/archive/envelope.mjs "$RUNNER_TEMP/gx-plain.zip" docs/content/archive-recipient.pub.pem "$RUNNER_TEMP/gx-deliver/corpus.gxa"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: historical-archive-encrypted
+          path: |
+            ${{ runner.temp }}/gx-deliver/corpus.gxa
+            ${{ runner.temp }}/gx-deliver/inventory.json
+          retention-days: 1
+          if-no-files-found: error
+          compression-level: 0
+      - name: Remove transient plaintext
+        if: always()
+        run: rm -rf "$RUNNER_TEMP/gx-private" "$RUNNER_TEMP/gx-plain.zip" "$RUNNER_TEMP/gx-deliver"

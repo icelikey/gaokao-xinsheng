@@ -1,0 +1,49 @@
+name: Archive inventory checks
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  archive-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      NEXT_PUBLIC_APP_ENV: local
+      EXAM_STORE_BACKEND: memory
+      SUPABASE_STORE_ADAPTER_ENABLED: 'false'
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec tsx --test scripts/archive-inventory-check.ts
+      - run: python3 -m unittest discover -s scripts/archive -p 'test_*.py' -v
+      - run: pnpm build
+      - name: Install isolated browser test tools
+        run: |
+          npm install --prefix "$RUNNER_TEMP/gx-browser" --no-package-lock --ignore-scripts playwright@1.58.0
+          node "$RUNNER_TEMP/gx-browser/node_modules/playwright/cli.js" install --with-deps chromium
+      - name: Check actual archive page
+        run: |
+          mkdir -p output/archive-e2e
+          pnpm --filter @gaokao-xinsheng/web exec next start -H 127.0.0.1 -p 3100 > output/archive-e2e/server.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          GX_BROWSER_MODULE="$RUNNER_TEMP/gx-browser/node_modules/playwright" GX_BASE_URL=http://127.0.0.1:3100 node scripts/archive-browser-check.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: archive-browser-evidence
+          path: output/archive-e2e/
+          retention-days: 7
+          if-no-files-found: warn

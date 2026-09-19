@@ -1,0 +1,23 @@
+import {strict as assert} from 'node:assert';
+import {test} from 'node:test';
+import {parseArchiveInventory,archiveCoverage,archiveStats,sourceLink} from '../apps/web/src/lib/archive-inventory';
+const file={sha256:'a'.repeat(64),bytes:42,path:`raw/${'a'.repeat(64)}.pdf`,format:'pdf',url:'https://gaokao.eol.cn/test.pdf'};
+const record={id:'r1',title:'2000年语文试卷',url:'https://gaokao.eol.cn/2000.html',year:2000,subject:'语文',track:'未核定',session:'普通',provider:'fixture',status:'DISCOVERED',assets:[],examReady:false,ragEnabled:false,contentVerified:false};
+function manifest(records:unknown[]=[record]){return {schemaVersion:'archive-inventory/1',complete:false,generatedAt:'2026-09-19T00:00:00Z',records};}
+test('78 cells, unknown denominator',()=>{const x=archiveCoverage([]);assert.equal(x.length,78);assert.ok(x.every(c=>c.expectedDistinctEditions===null&&!c.allEditionsComplete));});
+test('normal source stays unverified',()=>{const x=parseArchiveInventory(manifest());assert.equal(x.records.length,1);assert.equal(archiveStats(x.records).verifiedPapers,0);});
+test('failed and unattempted distinct',()=>{const a=parseArchiveInventory(manifest([record,{...record,id:'r2',status:'FETCH_FAILED'}]));assert.equal(archiveStats(a.records).failed,1);assert.equal(archiveStats(a.records).discovered,1);});
+test('file signature evidence required',()=>{assert.throws(()=>parseArchiveInventory(manifest([{...record,status:'FILE_SAVED'}])));});
+test('webpage is not document',()=>{assert.throws(()=>parseArchiveInventory(manifest([{...record,status:'FILE_SAVED',file:{...file,format:'html.txt'}}])));});
+test('honest page count',()=>{const x=parseArchiveInventory(manifest([{...record,status:'PAGE_SAVED',file:{...file,format:'html.txt'}}]));assert.equal(archiveStats(x.records).pages,1);assert.equal(archiveStats(x.records).files,0);});
+test('valid file count',()=>{const x=parseArchiveInventory(manifest([{...record,status:'FILE_SAVED',file}]));assert.equal(archiveStats(x.records).files,1);assert.equal(archiveStats(x.records).examReady,0);});
+test('deduplicate bytes not source records',()=>{const x=parseArchiveInventory(manifest([{...record,status:'FILE_SAVED',file},{...record,id:'r2',status:'FILE_SAVED',file}]));assert.equal(archiveStats(x.records).sources,2);assert.equal(archiveStats(x.records).assetFiles,1);assert.equal(archiveStats(x.records).bytes,42);});
+test('no fake completion',()=>{assert.throws(()=>parseArchiveInventory({...manifest(),complete:true}));});
+test('no fake readiness',()=>{for(const key of ['examReady','ragEnabled','contentVerified'])assert.throws(()=>parseArchiveInventory(manifest([{...record,[key]:true}])));});
+test('out of range years fail',()=>{for(const year of [1999,2026,2001.1,'2002'])assert.throws(()=>parseArchiveInventory(manifest([{...record,year}])));});
+test('unknown years preserved',()=>{const x=parseArchiveInventory(manifest([{...record,year:null}]));assert.equal(archiveStats(x.records).unknownYear,1);assert.equal(archiveCoverage(x.records).reduce((s,c)=>s+c.sources,0),0);});
+test('subject scope explicit',()=>{assert.throws(()=>parseArchiveInventory(manifest([{...record,subject:'物理'}])));});
+test('duplicate IDs rejected',()=>{assert.throws(()=>parseArchiveInventory(manifest([record,record])));});
+test('unsafe source links rejected',()=>{for(const u of ['javascript:alert(1)','https://127.0.0.1','https://gaokao.eol.cn.evil.test','https://u:p@gaokao.eol.cn','https://gaokao.eol.cn:8080'])assert.equal(sourceLink(u),null);});
+test('invalid hashes and paths rejected',()=>{for(const patch of [{sha256:'x'},{path:'../../x.pdf'},{bytes:-1},{bytes:99999999999}])assert.throws(()=>parseArchiveInventory(manifest([{...record,status:'FILE_SAVED',file:{...file,...patch}}])));});
+test('oversized import rejected',()=>{assert.throws(()=>parseArchiveInventory(manifest(new Array(20001).fill(record))));});
