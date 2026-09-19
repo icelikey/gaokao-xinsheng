@@ -25,7 +25,7 @@ try{
  await page.setViewportSize({width:390,height:844});await page.screenshot({path:out+'/archive-mobile.png',fullPage:true});
  const download=page.waitForEvent('download');await page.getByRole('button',{name:'导出清单',exact:true}).click();await (await download).saveAs(out+'/fixture-export.json');results.push('JSON export');
  await page.getByLabel('载入收纳清单',{exact:true}).setInputFiles({name:'unsafe.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify({...inventory,complete:true}))});
- await page.getByRole('alert').waitFor();assert.equal(await page.locator('.archiveRecord').count(),2);results.push('invalid completion rejected without replacing current data');
+ await page.locator('.archiveError[role="alert"]').waitFor();assert.equal(await page.locator('.archiveRecord').count(),2);results.push('invalid completion rejected without replacing current data');
  assert.equal(errors.length,0);results.push('no page errors');
  writeFileSync(out+'/results.json',JSON.stringify({ok:true,results,pageErrors:errors,fixture:true,notCorpusValidation:true},null,2));
  console.log(JSON.stringify({ok:true,checks:results}));
